@@ -53,13 +53,13 @@ internal object App {
                 0
         )
 
-        timer.schedule(object: TimerTask() {
+        timer.schedule(object : TimerTask() {
             override fun run() {
                 threadPool.submit {
                     writeArticle("owgenji")
                 }
             }
-        }, 60 * 1000)
+        }, calendar.time, 60 * 1000)
 
         logger.info("타이머 생성 완료!")
         logger.info("글 작성 대기 중...")
