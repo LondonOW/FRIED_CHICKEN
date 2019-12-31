@@ -90,17 +90,17 @@ internal object App {
 
         loop@ do {
             result = articleWrite.write()
-            when (result.cause) {
-                "잠시후 다시 이용해주세요." -> {
+            when {
+                !result.result -> {
                     if (!count) {
-                        logger.error("디시 서버의 차단으로 인한 글 작성 실패, 다시 시도합니다.")
+                        logger.error("글 작성 실패, 다시 시도합니다.")
                         count = true
                     }
                     Thread.sleep(500)
                     result = articleWrite.write()
                 }
                 else -> {
-                    logger.error("글 작성 실패 : ")
+                    logger.error("글 작성 완료 : ")
                     logger.error(result.toString())
                     break@loop
                 }
