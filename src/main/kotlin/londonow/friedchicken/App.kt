@@ -11,7 +11,6 @@ import be.zvz.kotlininside.api.type.content.StringContent
 import be.zvz.kotlininside.http.DefaultHttpClient
 import be.zvz.kotlininside.session.user.LoginUser
 import org.slf4j.LoggerFactory
-import java.lang.NullPointerException
 import java.util.*
 import java.util.concurrent.Executors
 
@@ -86,17 +85,12 @@ internal object App {
 
         lateinit var result: ArticleWrite.WriteResult
 
-        var count = false
-
         loop@ do {
             result = articleWrite.write()
             when {
                 !result.result -> {
-                    if (!count) {
-                        logger.error("글 작성 실패, 다시 시도합니다.")
-                        logger.error(result.toString())
-                        count = true
-                    }
+                    logger.error("글 작성 실패, 다시 시도합니다.")
+                    logger.error(result.toString())
                     Thread.sleep(500)
                     result = articleWrite.write()
                 }
