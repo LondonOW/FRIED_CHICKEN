@@ -34,7 +34,7 @@ jar {
     manifest {
         attributes 'Main-Class': 'londonow.friedchicken.App'
         attributes 'Implementation-Title': 'FriedChicken'
-        attributes 'Implementation-Version': '1.0.0'
+        attributes 'Implementation-Version': '1.0.1'
     }
 }
 

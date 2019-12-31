@@ -94,14 +94,15 @@ internal object App {
                 !result.result -> {
                     if (!count) {
                         logger.error("글 작성 실패, 다시 시도합니다.")
+                        logger.error(result.toString())
                         count = true
                     }
                     Thread.sleep(500)
                     result = articleWrite.write()
                 }
                 else -> {
-                    logger.error("글 작성 완료 : ")
-                    logger.error(result.toString())
+                    logger.info("글 작성 완료 : ")
+                    logger.info(result.toString())
                     break@loop
                 }
             }
