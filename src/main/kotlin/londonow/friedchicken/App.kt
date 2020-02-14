@@ -17,7 +17,7 @@ import java.util.concurrent.Executors
 
 internal object App {
     private val logger = LoggerFactory.getLogger(App::class.java)
-    private val threadPool = Executors.newCachedThreadPool()
+    private val threadPool = Executors.newFixedThreadPool(5)
 
     @JvmStatic
     fun main(args: Array<String>) {
@@ -41,25 +41,34 @@ internal object App {
 
         logger.info("타이머 생성 중")
 
-        val timer = Timer()
+        val writeArticleTimer = Timer()
+        val appIdTimer = Timer()
 
         val calendar = Calendar.getInstance();
         calendar.set(
-                2019,
-                12,
-                31,
+                2020,
+                2,
+                14,
                 23,
                 59,
                 0
         )
 
-        timer.schedule(object : TimerTask() {
+        appIdTimer.schedule(object : TimerTask() {
+            override fun run() {
+                threadPool.submit {
+                    KotlinInside.getInstance().auth.getAppId()
+                }
+            }
+        }, calendar.time)
+
+        writeArticleTimer.schedule(object : TimerTask() {
             override fun run() {
                 threadPool.submit {
                     writeArticle("owgenji")
                 }
             }
-        }, calendar.time, 60 * 1000)
+        }, calendar.time, 58 * 1000)
 
         logger.info("타이머 생성 완료!")
         logger.info("글 작성 대기 중...")
@@ -74,7 +83,7 @@ internal object App {
         val articleWrite = ArticleWrite(
                 gallId = gallId,
                 article = Article(
-                        subject = "새해 첫글",
+                        subject = "발렌타인데이 마지막 글ㅇㅇ",
                         content = listOf(
                                 StringContent("ㅇㅇ")
                         ),
@@ -91,7 +100,6 @@ internal object App {
                 !result.result -> {
                     logger.error("글 작성 실패, 다시 시도합니다.")
                     logger.error(result.toString())
-                    Thread.sleep(500)
                     result = articleWrite.write()
                 }
                 else -> {
